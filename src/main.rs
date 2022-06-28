@@ -9,8 +9,7 @@ fn main() {
     let args = CLIArgs::parse();
     let original = ImageRecord::new(args.input);
 
-    println!("we have dimensions: {:?}", original.get_dimensions());
-    println!("we have dimensions: {:?}", original.get_path());
+    println!("using file: {:?}", original.get_path());
 }
 
 #[derive(Parser, Debug)]
@@ -36,13 +35,13 @@ impl ImageRecord {
 
         // create a file from our input
         let file = match File::open(&p) {
-            Ok(f) => {
-                println!("successfully opened the file {:?}", &p);
-                f
+            Ok(f) => f,
+            Err(e) => {
+                eprintln!("error opening file: {:?}", &p);
+                panic!("{}", e);
             },
-            Err(e) => panic!("{}", e),
         };
-        
+
         // create a clone from the file, this uses the same file descriptor as
         // the original, so operations technically affect both. we only need
         // this for dimensions though...
@@ -71,7 +70,7 @@ impl ImageRecord {
             path: p,
             image: original,
             dimensions
-        }
+        };
     }
 
     pub fn get_dimensions(&self) -> &(u32, u32) {
