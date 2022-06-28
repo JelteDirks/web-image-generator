@@ -2,8 +2,14 @@
 name = "web-image-resizer"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Jelte Dirks<j.dirks@outlook.com>"]
+license = "MIT"
+description = "A tool for converting an image to specific predefined sizes."
+readme = "README.md"
+homepage = "https://github.com/jeltedirks/web-image-generator"
+repository = "https://github.com/jeltedirks/web-image-generator"
+keywords = ["cli", "image", "conversion", "web", "icons"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "3.2.6", features = ["derive"] }
