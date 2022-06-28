@@ -9,7 +9,8 @@ fn main() {
     let args = CLIArgs::parse();
     let original = ImageRecord::new(args.input);
 
-    println!("we have dimensions: {:?}", original.dimensions);
+    println!("we have dimensions: {:?}", original.get_dimensions());
+    println!("we have dimensions: {:?}", original.get_path());
 }
 
 #[derive(Parser, Debug)]
@@ -71,5 +72,13 @@ impl ImageRecord {
             image: original,
             dimensions
         }
+    }
+
+    pub fn get_dimensions(&self) -> &(u32, u32) {
+        return &self.dimensions;
+    }
+
+    pub fn get_path(&self) -> &PathBuf {
+        return &self.path;
     }
 }
