@@ -1,8 +1,22 @@
+use std::io::{BufReader};
 use std::path::PathBuf;
 use std::fs::File;
+use serde::{Serialize, Deserialize};
+use serde_json::from_reader;
 
 pub struct Config {
     location: PathBuf,
+}
+
+#[derive(Deserialize, Serialize)]
+struct ConfigurationFile {
+    sizes: Vec<SizeDescription>,
+}
+
+#[derive(Deserialize, Serialize)]
+struct SizeDescription {
+    tags: String,
+    dimensions: Vec<(u32, u32)>,
 }
 
 impl Config {
@@ -19,6 +33,8 @@ impl Config {
                 panic!("{}", e);
             },
         };
+
+        let json = from_reader::<BufReader<File>, ConfigurationFile>(BufReader::new(file));
 
         return Config {
             location
