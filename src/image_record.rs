@@ -28,6 +28,8 @@ impl ImageRecord {
         let formatted = imagereader.with_guessed_format().unwrap();
         let image = formatted.decode().unwrap();
 
+        println!("loaded image {:?} into memory", &p);
+
         return ImageRecord {
             path: p,
             content: image,
@@ -36,5 +38,9 @@ impl ImageRecord {
 
     pub fn get_path(&self) -> &PathBuf {
         return &self.path;
+    }
+
+    pub fn as_ref(&self) -> &DynamicImage {
+        return &self.content;
     }
 }
