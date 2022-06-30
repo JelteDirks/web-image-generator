@@ -4,14 +4,15 @@ use std::path::PathBuf;
 mod image_record;
 use image_record::ImageRecord;
 mod config;
-use config::Config;
+use config::{Config, SizeDescription};
 
 fn main() {
     let args = CLIArgs::parse();
     let original = ImageRecord::new(args.input);
-    let config = Config::new(args.configuration);
+    let config = Config::from_path(args.configuration);
 
-    println!("using image file: {:?}", original.get_path());
+    // configuration and original file should be loaded properly here
+
 }
 
 #[derive(Parser)]

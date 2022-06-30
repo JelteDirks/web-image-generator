@@ -6,23 +6,19 @@ use serde_json::from_reader;
 
 type BRF = BufReader<File>;
 
+#[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
-    location: PathBuf,
+    pub sizes: Vec<SizeDescription>,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
-struct CfgFile {
-    sizes: Vec<SizeDescription>,
-}
-
-#[derive(Deserialize, Serialize, Debug)]
-struct SizeDescription {
-    tags: String,
-    dimensions: (u32, u32),
+pub struct SizeDescription {
+    pub tags: String,
+    pub dimensions: (u32, u32),
 }
 
 impl Config {
-    pub fn new(location: PathBuf) -> Config {
+    pub fn from_path(location: PathBuf) -> Config {
         // setup the configuration for this conversion operation
 
         let file = match File::open(&location) {
@@ -36,12 +32,7 @@ impl Config {
             },
         };
 
-        let json = from_reader::<BRF, CfgFile>(BufReader::new(file));
-
-        println!("content: {:?}", json);
-
-        return Config {
-            location
-        }
+        let json = from_reader::<BRF, Config>(BufReader::new(file));
+        return json.unwrap();
     }
 }
