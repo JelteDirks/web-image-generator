@@ -6,15 +6,29 @@ use serde_json::from_reader;
 
 type BRF = BufReader<File>;
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Debug)]
 pub struct Config {
     pub sizes: Vec<SizeDescription>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Deserialize, Debug)]
 pub struct SizeDescription {
+    #[serde(default)]
     pub tags: String,
+
     pub dimensions: (u32, u32),
+
+    #[serde(default)]
+    pub extension: Extension,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Extension(String);
+
+impl Default for Extension {
+    fn default() -> Extension {
+        return Extension("jpeg".to_string());
+    }
 }
 
 impl Config {

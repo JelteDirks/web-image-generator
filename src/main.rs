@@ -16,5 +16,6 @@ fn main() {
 
     // configuration and original file should be loaded properly here
 
+    println!("config = {:?}", config);
 }
 
