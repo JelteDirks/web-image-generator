@@ -22,19 +22,17 @@ fn main() {
 
     // configuration and original file should be loaded properly here
 
-    let mut output = PathBuf::new();
-    output.push("./converted");
+    let mut output: PathBuf = args.output;
 
-    let mut i: u32 = 0;
+    check_output(&output);
+
     for size_description in config.sizes {
-        i = i + 1;
-        println!("dim {:?}", size_description.dimensions);
-
         let (width, height): (u32, u32) = size_description.dimensions;
         let mut filename = width.to_string();
         filename.push_str("x");
-        filename.push_str(&(height.to_string()));
+        filename.push_str(&height.to_string());
         filename.push_str(".png");
+        // make resize an option in the config (fill / exact / fit)
         let new_image = original.as_ref().resize_to_fill(
             width,
             height,
@@ -42,8 +40,9 @@ fn main() {
 
         output.push(filename);
         new_image.save(&output);
-        println!("output {:?}", &output);
         output.pop();
+
+        drop(new_image);
     }
 }
 

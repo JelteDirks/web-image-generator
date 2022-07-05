@@ -9,9 +9,12 @@ pub struct CLIArgs {
     // 2. the dimension package that is required?
     // 3. which filter to choose from when resizing (advanced)
 
-    #[clap(short = 'i', long = "input", parse(from_os_str))]
+    #[clap(short='i', long="input", parse(from_os_str))]
     pub input: PathBuf,
 
-    #[clap(short = 'c', long = "config", parse(from_os_str))]
+    #[clap(short='o', long="output", default_value="./converted", parse(from_os_str))]
+    pub output: PathBuf,
+
+    #[clap(short='c', long="config", parse(from_os_str))]
     pub configuration: PathBuf,
 }
