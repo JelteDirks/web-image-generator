@@ -23,16 +23,15 @@ pub fn convert(size_description: SizeDescription,
                original: &ImageRecord,
                mut output: PathBuf) {
     let (width, height): (u32, u32) = size_description.dimensions;
-    let filename = construct_filename(width, height);
     let default_filter = FilterType::Nearest;
 
-    let filter: FilterType = match size_description.filter {
+    let filter: FilterType = match &size_description.filter {
         Some(f) => match f.as_str() {
+            "Nearest" => FilterType::Nearest,
+            "Triangle" => FilterType::Triangle,
+            "CatmullRom" => FilterType::CatmullRom,
             "Gaussian" => FilterType::Gaussian,
-            "Nearest" => FilterType::Gaussian,
-            "Triangle" => FilterType::Gaussian,
-            "CatmullRom" => FilterType::Gaussian,
-            "Lanczos3" => FilterType::Gaussian,
+            "Lanczos3" => FilterType::Lanczos3,
             _ => default_filter,
         },
         None => default_filter,
@@ -72,10 +71,15 @@ pub fn convert(size_description: SizeDescription,
 
     println!("resizing took {:?}", now.elapsed());
 
+    // change filename to incorporate settings
+    let mut filename = construct_filename(width, height);
     output.push(filename);
+
+    println!("saving to {:?}", &output);
+
     new_image.save(&output).expect("error saving image to output");
 
-    println!("saving took {:?}", now.elapsed().as_millis());
+    println!("saving took {:?}", now.elapsed());
 }
 
 
