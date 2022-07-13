@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 use std::fs;
-use std::time::Instant;
 use image::imageops::FilterType;
 use image::DynamicImage;
 
@@ -40,14 +39,6 @@ pub fn convert(size_description: SizeDescription,
     let fill_style = size_description.fill.unwrap_or("preserve".to_owned());
     let original_ref = original.as_ref();
 
-    println!("resizing to width={:?},height={:?},filter={:?},style={:?}",
-             &width,
-             &height,
-             &filter,
-             &fill_style);
-
-    let now = Instant::now();
-
     let new_image: DynamicImage = match fill_style.as_str() {
         "fill" => {
             original_ref.resize_to_fill(
@@ -69,24 +60,26 @@ pub fn convert(size_description: SizeDescription,
         },
     };
 
-    println!("resizing took {:?}", now.elapsed());
+    let filename = construct_filename(
+        width,
+        height,
+        &fill_style,
+        &size_description.filter);
 
-    // change filename to incorporate settings
-    let mut filename = construct_filename(width, height);
     output.push(filename);
-
-    println!("saving to {:?}", &output);
-
     new_image.save(&output).expect("error saving image to output");
-
-    println!("saving took {:?}", now.elapsed());
 }
 
 
-fn construct_filename(width: u32, height: u32) -> String {
+fn construct_filename(width: u32,
+                      height: u32,
+                      fill_style: &String,
+                      filter: &Option<String>,) -> String {
     let mut filename = width.to_string();
     filename.push_str("x");
     filename.push_str(&height.to_string());
+    filename.push_str(fill_style);
+    filename.push_str(filter.as_ref().unwrap());
     filename.push_str(".png");
     return filename;
 }

@@ -4,8 +4,6 @@ use std::fs::File;
 use serde::Deserialize;
 use serde_json::from_reader;
 
-type BRF = BufReader<File>;
-
 #[derive(Deserialize, Debug)]
 pub struct Config {
     pub sizes: Vec<SizeDescription>,
@@ -37,8 +35,6 @@ impl Default for Extension {
 
 impl Config {
     pub fn from_path(location: PathBuf) -> Config {
-        // setup the configuration for this conversion operation
-
         let file = match File::open(&location) {
             Ok(f) => {
                 f
@@ -49,7 +45,7 @@ impl Config {
             },
         };
 
-        let json = from_reader::<BRF, Config>(BufReader::new(file));
+        let json = from_reader::<BufReader<File>, Config>(BufReader::new(file));
         return json.unwrap();
     }
 }

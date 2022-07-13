@@ -10,8 +10,6 @@ pub struct ImageRecord {
 
 impl ImageRecord {
     pub fn new(p: PathBuf) -> ImageRecord {
-
-        // create a file from our input
         let file = match File::open(&p) {
             Ok(f) => f,
             Err(e) => {
@@ -19,15 +17,9 @@ impl ImageRecord {
                 panic!("{}", e);
             },
         };
-
-        // file exists
-
         let imagereader = ImageReader::new(BufReader::new(file));
         let formatted = imagereader.with_guessed_format().unwrap();
         let image = formatted.decode().unwrap();
-
-        println!("loaded image {:?} into memory", &p);
-
         return ImageRecord {
             content: image,
         };
