@@ -1,6 +1,8 @@
 use std::path::PathBuf;
 use std::fs;
+use std::time::Instant;
 use image::imageops::FilterType;
+use image::DynamicImage;
 
 use crate::config::SizeDescription;
 use crate::image_record::ImageRecord;
@@ -22,15 +24,58 @@ pub fn convert(size_description: SizeDescription,
                mut output: PathBuf) {
     let (width, height): (u32, u32) = size_description.dimensions;
     let filename = construct_filename(width, height);
+    let default_filter = FilterType::Nearest;
 
-    // make resize an option in the config (fill / exact / fit)
-    let new_image = original.as_ref().resize_to_fill(
-        width,
-        height,
-        FilterType::Gaussian);
+    let filter: FilterType = match size_description.filter {
+        Some(f) => match f.as_str() {
+            "Gaussian" => FilterType::Gaussian,
+            "Nearest" => FilterType::Gaussian,
+            "Triangle" => FilterType::Gaussian,
+            "CatmullRom" => FilterType::Gaussian,
+            "Lanczos3" => FilterType::Gaussian,
+            _ => default_filter,
+        },
+        None => default_filter,
+    };
+
+    let fill_style = size_description.fill.unwrap_or("preserve".to_owned());
+    let original_ref = original.as_ref();
+
+    println!("resizing to width={:?},height={:?},filter={:?},style={:?}",
+             &width,
+             &height,
+             &filter,
+             &fill_style);
+
+    let now = Instant::now();
+
+    let new_image: DynamicImage = match fill_style.as_str() {
+        "fill" => {
+            original_ref.resize_to_fill(
+                width,
+                height,
+                filter)
+        },
+        "exact" => {
+            original_ref.resize_exact(
+                width,
+                height,
+                filter)
+        },
+        "preserve" | _ => {
+            original_ref.resize(
+                width,
+                height,
+                filter)
+        },
+    };
+
+    println!("resizing took {:?}", now.elapsed());
 
     output.push(filename);
     new_image.save(&output).expect("error saving image to output");
+
+    println!("saving took {:?}", now.elapsed().as_millis());
 }
 
 

@@ -18,6 +18,10 @@ pub struct SizeDescription {
 
     pub dimensions: (u32, u32),
 
+    pub fill: Option<String>,
+
+    pub filter: Option<String>,
+
     #[serde(default)]
     pub extension: Extension,
 }
@@ -37,7 +41,6 @@ impl Config {
 
         let file = match File::open(&location) {
             Ok(f) => {
-                println!("using configuration file: {:?}", &location);
                 f
             }
             Err(e) => {
