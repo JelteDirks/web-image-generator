@@ -2,6 +2,7 @@ use std::path::PathBuf;
 use std::fs;
 use image::imageops::FilterType;
 use image::DynamicImage;
+use std::sync::Arc;
 
 use crate::config::SizeDescription;
 use crate::image_record::ImageRecord;
@@ -19,7 +20,7 @@ pub fn check_output(path: &PathBuf) {
 }
 
 pub fn convert(size_description: SizeDescription,
-               original: &ImageRecord,
+               original: Arc<ImageRecord>,
                mut output: PathBuf) {
     let (width, height): (u32, u32) = size_description.dimensions;
     let default_filter = FilterType::Nearest;
@@ -37,7 +38,7 @@ pub fn convert(size_description: SizeDescription,
     };
 
     let fill_style = size_description.fill.unwrap_or("preserve".to_owned());
-    let original_ref = original.as_ref();
+    let original_ref = original.as_ref().as_image_ref();
 
     let new_image: DynamicImage = match fill_style.as_str() {
         "fill" => {

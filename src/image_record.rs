@@ -25,7 +25,7 @@ impl ImageRecord {
         };
     }
 
-    pub fn as_ref(&self) -> &DynamicImage {
+    pub fn as_image_ref(&self) -> &DynamicImage {
         return &self.content;
     }
 }

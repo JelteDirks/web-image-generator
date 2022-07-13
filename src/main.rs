@@ -22,13 +22,22 @@ fn main() {
     check_output(&args.output);
 
     let arc_image = Arc::new(original_image);
+    let mut handles = Vec::new();
+    let mut counter = 0;
 
     for size_description in config.sizes {
+        counter += 1;
         let output_clone = args.output.clone();
         let img = Arc::clone(&arc_image);
-        thread::spawn(move || {
-            convert(size_description, &img, output_clone);
+        let handle = thread::spawn(move || {
+            convert(size_description, img, output_clone);
+            println!("finished converting in thread {:?}", counter);
         });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
     }
 }
 
