@@ -1,4 +1,6 @@
 use clap::Parser;
+use std::thread;
+use std::sync::Arc;
 
 mod image_record;
 use image_record::ImageRecord;
@@ -15,12 +17,18 @@ use util::{convert, check_output};
 fn main() {
     let args = CLIArgs::parse();
     let config = Config::from_path(args.configuration);
-    let original = ImageRecord::new(args.input);
+    let original_image = ImageRecord::new(args.input);
 
     check_output(&args.output);
 
+    let arc_image = Arc::new(original_image);
+
     for size_description in config.sizes {
-        convert(size_description, &original, args.output.clone());
+        let output_clone = args.output.clone();
+        let img = Arc::clone(&arc_image);
+        thread::spawn(move || {
+            convert(size_description, &img, output_clone);
+        });
     }
 }
 
