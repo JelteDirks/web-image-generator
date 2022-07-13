@@ -1,12 +1,10 @@
 use image::io::Reader as ImageReader;
-use image::ImageFormat;
 use image::DynamicImage;
 use std::fs::File;
 use std::io::{BufReader};
 use std::path::PathBuf;
 
 pub struct ImageRecord {
-    path: PathBuf,
     content: DynamicImage,
 }
 
@@ -31,13 +29,8 @@ impl ImageRecord {
         println!("loaded image {:?} into memory", &p);
 
         return ImageRecord {
-            path: p,
             content: image,
         };
-    }
-
-    pub fn get_path(&self) -> &PathBuf {
-        return &self.path;
     }
 
     pub fn as_ref(&self) -> &DynamicImage {

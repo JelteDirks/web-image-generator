@@ -1,7 +1,7 @@
 use std::io::{BufReader};
 use std::path::PathBuf;
 use std::fs::File;
-use serde::{Serialize, Deserialize};
+use serde::Deserialize;
 use serde_json::from_reader;
 
 type BRF = BufReader<File>;
