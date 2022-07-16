@@ -20,18 +20,11 @@ pub struct SizeDescription {
 
     pub filter: Option<String>,
 
-    #[serde(default)]
-    pub extension: Extension,
+    pub prepend: Option<String>,
+
+    pub extension: Option<String>,
 }
 
-#[derive(Deserialize, Debug)]
-pub struct Extension(String);
-
-impl Default for Extension {
-    fn default() -> Extension {
-        return Extension("jpeg".to_string());
-    }
-}
 
 impl Config {
     pub fn from_path(location: PathBuf) -> Config {

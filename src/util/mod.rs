@@ -23,20 +23,7 @@ pub fn convert(size_description: SizeDescription,
                original: Arc<ImageRecord>,
                mut output: PathBuf) {
     let (width, height): (u32, u32) = size_description.dimensions;
-    let default_filter = FilterType::Nearest;
-
-    let filter: FilterType = match &size_description.filter {
-        Some(f) => match f.as_str() {
-            "Nearest" => FilterType::Nearest,
-            "Triangle" => FilterType::Triangle,
-            "CatmullRom" => FilterType::CatmullRom,
-            "Gaussian" => FilterType::Gaussian,
-            "Lanczos3" => FilterType::Lanczos3,
-            _ => default_filter,
-        },
-        None => default_filter,
-    };
-
+    let filter: FilterType = set_filter(&size_description.filter);
     let fill_style = size_description.fill.unwrap_or("preserve".to_owned());
     let original_ref = original.as_ref().as_image_ref();
 
@@ -65,22 +52,38 @@ pub fn convert(size_description: SizeDescription,
         width,
         height,
         &fill_style,
-        &size_description.filter);
+        &size_description.filter,
+        &size_description.extension);
 
     output.push(filename);
     new_image.save(&output).expect("error saving image to output");
 }
 
+fn set_filter(filter: &Option<String>) -> FilterType {
+    let default_filter = FilterType::Nearest;
+    return match &filter {
+        Some(f) => match f.as_str() {
+            "Nearest" => FilterType::Nearest,
+            "Triangle" => FilterType::Triangle,
+            "CatmullRom" => FilterType::CatmullRom,
+            "Gaussian" => FilterType::Gaussian,
+            "Lanczos3" => FilterType::Lanczos3,
+            _ => default_filter,
+        },
+        None => default_filter,
+    };
+}
 
 fn construct_filename(width: u32,
                       height: u32,
                       fill_style: &String,
-                      filter: &Option<String>,) -> String {
+                      filter: &Option<String>,
+                      extension: &Option<String>) -> String {
     let mut filename = width.to_string();
     filename.push_str("x");
     filename.push_str(&height.to_string());
     filename.push_str(fill_style);
     filename.push_str(filter.as_ref().unwrap());
-    filename.push_str(".png");
+    filename.push_str(extension.as_ref().unwrap());
     return filename;
 }

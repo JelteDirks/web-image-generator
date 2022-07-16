@@ -37,7 +37,7 @@ fn main() {
     }
 
     for handle in handles {
-        handle.join().unwrap();
+        handle.join().expect("problem in one of the threads");
     }
 }
 
