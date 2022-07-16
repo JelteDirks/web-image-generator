@@ -1,0 +1,28 @@
+{
+    "sizes" : [
+        {
+            "dimensions": [1280, 800],
+            "filter" : "Gaussian",
+            "extension": ".png",
+            "prepend": "pngfile"
+        },
+        {
+            "dimensions": [1280, 800],
+            "filter" : "Gaussian",
+            "extension": ".tiff",
+            "prepend": "tifffile"
+        },
+        {
+            "dimensions": [3840, 2160],
+            "filter" : "Gaussian",
+            "extension": ".png",
+            "prepend": "jpegfile"
+        },
+        {
+            "dimensions": [1280, 800],
+            "filter" : "Gaussian",
+            "name": "totally custom",
+            "extension": ".png"
+        }
+    ]
+}

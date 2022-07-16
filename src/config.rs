@@ -11,9 +11,6 @@ pub struct Config {
 
 #[derive(Deserialize, Debug)]
 pub struct SizeDescription {
-    #[serde(default)]
-    pub tags: String,
-
     pub dimensions: (u32, u32),
 
     pub fill: Option<String>,
@@ -23,6 +20,8 @@ pub struct SizeDescription {
     pub prepend: Option<String>,
 
     pub extension: Option<String>,
+
+    pub name: Option<String>,
 }
 
 

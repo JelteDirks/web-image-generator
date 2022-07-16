@@ -49,12 +49,13 @@ pub fn convert(size_description: SizeDescription,
     };
 
     let filename = construct_filename(
-        width,
-        height,
-        &fill_style,
-        &size_description.filter,
-        &size_description.extension,
-        &size_description.prepend);
+                width,
+                height,
+                &fill_style,
+                &size_description.filter,
+                &size_description.extension,
+                &size_description.prepend,
+                &size_description.name);
 
     output.push(filename);
     new_image.save(&output).expect("error saving image to output");
@@ -80,7 +81,15 @@ fn construct_filename(width: u32,
                       fill_style: &String,
                       filter: &Option<String>,
                       extension: &Option<String>,
-                      prepend: &Option<String>) -> String {
+                      prepend: &Option<String>,
+                      name: &Option<String>) -> String {
+
+    if name.is_some() {
+        let mut filename = name.as_ref().unwrap().to_owned();
+        filename.push_str(extension.as_ref().unwrap_or(&".jpg".to_owned()));
+        return filename.to_string();
+    }
+
     let mut filename = prepend.as_ref().unwrap_or(&String::from("image")).to_owned();
     filename.push_str(&width.to_string());
     filename.push_str("x");

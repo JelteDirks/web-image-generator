@@ -1,0 +1,3 @@
+rm -r converted/
+cargo build --release
+./target/release/web-image-resizer -i test/wallpaper.png -o converted -c test/config.json
