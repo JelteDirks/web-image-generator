@@ -1,4 +1,4 @@
-use std::io::{BufReader};
+use std::io::BufReader;
 use std::path::PathBuf;
 use std::fs::File;
 use serde::Deserialize;
